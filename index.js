@@ -5,7 +5,7 @@ const async = require('async');
 const utils = require('./utils');
 const config = require('./config');
 
-const API_ROOT = 'localhost:4000/video-cut-tool-back-end'
+const API_ROOT = 'https://videocuttool.wmflabs.org/video-cut-tool-back-end'
 const PROCESS_VIDEO_QUEUE = 'PROCESS_VIDEO_QUEUE';
 const PROCESS_VIDEO_PROGRESS_QUEUE = 'PROCESS_VIDEO_PROGRESS_QUEUE';
 const PROCESS_VIDEO_FINISH_QUEUE = 'PROCESS_VIDEO_FINISH_QUEUE';
