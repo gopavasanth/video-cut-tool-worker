@@ -25,7 +25,7 @@ processVideoQueue.process(function (job, done) {
     const data = job.data;
     console.log("Received message", data);
     const { settings, ...rest } = job.data;
-    processVideo({...settings, ...rest}, (err, finalPaths) => {
+    processVideo({...settings, ...rest, rotateVideo: settings.rotateValue !== -1}, (err, finalPaths) => {
         if (err) {
             console.log('Error processing video', err);
             processVideoFinishQueue.add({ success: false, videoId: data._id })
@@ -51,7 +51,7 @@ processVideoQueue.process(function (job, done) {
 });
 
 
-function processVideo({ _id, url, videoName, trimVideo, trims, mode, cropVideo, out_width, out_height, x_value, y_value, rotateVideo, RotateValue, disableAudio, }, callback) {
+function processVideo({ _id, url, videoName, trimVideo, trims, mode, cropVideo, out_width, out_height, x_value, y_value, rotateVideo, rotateValue, disableAudio, }, callback) {
     utils.downloadVideo(url, videoName, (err, videoPath, videoDuration) => {
         if (err || !videoPath || !fs.existsSync(videoPath)) {
             console.log(err);
@@ -102,12 +102,12 @@ function processVideo({ _id, url, videoName, trimVideo, trims, mode, cropVideo, 
             });
         }
         // if the rotateVideo is true, this rotates the video to 90 degree clock-wise
-        // Params: videoPaths, RotateValue
+        // Params: videoPaths, rotateValue
         if (rotateVideo) {
             processFuncArray.push((videoPaths, cb) => {
                 console.log('rotating');
                 updateProgress(_id, 'rotating')
-                utils.rotateVideos(videoPaths, endVideoDuration, currentTimecode, RotateValue, (err, rotatedVideos, newCurrentTimecode) => {
+                utils.rotateVideos(videoPaths, endVideoDuration, currentTimecode, rotateValue, (err, rotatedVideos, newCurrentTimecode) => {
                     utils.deleteFiles(videoPaths);
                     if (err)
                         return cb(err);
